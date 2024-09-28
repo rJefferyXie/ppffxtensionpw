@@ -1,5 +1,5 @@
 // api/mistral.js
-import fetch from 'node-fetch';
+import { Mistral } from '@mistralai/mistralai';
 
 export default async function handler(req, res) {
   // Set CORS headers if necessary
@@ -9,29 +9,24 @@ export default async function handler(req, res) {
 
   // Handle POST requests
   if (req.method === 'POST') {
-    const { prompt } = req.body;
-    if (!prompt) {
-      return res.status(400).json({ error: 'Prompt is required' });
+    const { messages } = req.body;
+    if (!messages || messages.length === 0) {
+      return res.status(400).json({ error: 'Messages are required' });
     }
+
+    const apiKey = process.env.MISTRAL_API_KEY;
+    const client = new Mistral({ apiKey });
 
     try {
       // Mistral API call
-      const response = await fetch('https://api.mistral.ai/v1/generate', { // Update with the correct Mistral API endpoint
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${process.env.MISTRAL_API_KEY}`, // Use the environment variable for Mistral API Key
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ inputs: prompt }),
+      const chatResponse = await client.chat.complete({
+        model: "mistral-large-latest",  // Adjust the model name if necessary
+        messages,
       });
 
-      const data = await response.json();
-      if (response.ok) {
-        res.status(200).json({ result: data }); // Adjust based on Mistral API response format
-      } else {
-        res.status(response.status).json({ error: data.error });
-      }
+      res.status(200).json({ result: chatResponse });
     } catch (error) {
+      console.error("Error calling Mistral API:", error);
       res.status(500).json({ error: error.message });
     }
   } else {
