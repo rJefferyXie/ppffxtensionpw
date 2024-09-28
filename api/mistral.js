@@ -28,8 +28,11 @@ export default async function handler(req, res) {
         messages,
       });
 
+      console.log(chatResponse)
+
       res.status(200).json({ result: chatResponse });
     } catch (error) {
+      console.log(error)
       console.error("Error calling Mistral API:", error);
       res.status(500).json({ error: error.message });
     }
