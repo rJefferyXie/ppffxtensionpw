@@ -1,4 +1,4 @@
-// api/huggingface.js
+// api/mistral.js
 import fetch from 'node-fetch';
 
 export default async function handler(req, res) {
@@ -15,11 +15,11 @@ export default async function handler(req, res) {
     }
 
     try {
-      // Hugging Face API call
-      const response = await fetch('https://api-inference.huggingface.co/models/EleutherAI/gpt-j-6B', {
+      // Mistral API call
+      const response = await fetch('https://api.mistral.ai/v1/generate', { // Update with the correct Mistral API endpoint
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${process.env.HUGGING_FACE_API_KEY}`, // Use the environment variable
+          Authorization: `Bearer ${process.env.MISTRAL_API_KEY}`, // Use the environment variable for Mistral API Key
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ inputs: prompt }),
@@ -27,7 +27,7 @@ export default async function handler(req, res) {
 
       const data = await response.json();
       if (response.ok) {
-        res.status(200).json({ result: data });
+        res.status(200).json({ result: data }); // Adjust based on Mistral API response format
       } else {
         res.status(response.status).json({ error: data.error });
       }
