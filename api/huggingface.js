@@ -16,7 +16,7 @@ export default async function handler(req, res) {
 
     try {
       // Hugging Face API call
-      const response = await fetch('https://api-inference.huggingface.co/models/EleutherAI/gpt-neo-2.7B', {
+      const response = await fetch('https://api-inference.huggingface.co/models/EleutherAI/gpt-j-6B', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${process.env.HUGGING_FACE_API_KEY}`, // Use the environment variable
