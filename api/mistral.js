@@ -18,8 +18,6 @@ export default async function handler(req, res) {
     const client = new Mistral({ apiKey });
 
     try {
-      console.log("attempting api call.")
-
       // Set up the headers for streaming
       res.setHeader('Content-Type', 'text/plain');
       res.setHeader('Cache-Control', 'no-cache');
@@ -33,12 +31,11 @@ export default async function handler(req, res) {
 
       for await (const chunk of chatResponse) {
         const streamText = chunk.data.choices[0].delta.content;
-        console.log(streamText)
         res.write(streamText);
       }
 
       res.end()
-      
+
     } catch (error) {
       console.log(error)
       console.error("Error calling Mistral API:", error);
