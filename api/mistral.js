@@ -21,12 +21,19 @@ export default async function handler(req, res) {
       console.log("attempting api call.")
 
       // Mistral API call
-      const chatResponse = await client.chat.complete({
+      const chatResponse = await client.chat.stream({
         model: "mistral-large-latest",  // Adjust the model name if necessary
         messages: messages,
       });
 
-      console.log(chatResponse)
+      for await (const chunk of chatResponse) {
+        const streamText = chunk.data.choices[0].delta.content;
+        console.log(streamText)
+        res.write(streamText);
+        res.flush()
+      }
+
+      res.end()
 
       res.status(200).json({ result: chatResponse });
     } catch (error) {
