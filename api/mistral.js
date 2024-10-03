@@ -1,4 +1,5 @@
 // api/mistral.js
+import express from 'express';
 import { Mistral } from '@mistralai/mistralai';
 
 const app = express();
