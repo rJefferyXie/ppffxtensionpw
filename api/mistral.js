@@ -14,8 +14,6 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Messages are required' });
     }
 
-    console.log(messages)
-
     const apiKey = process.env.MISTRAL_API_KEY;
     const client = new Mistral({ apiKey });
 
@@ -25,7 +23,7 @@ export default async function handler(req, res) {
       // Mistral API call
       const chatResponse = await client.chat.complete({
         model: "mistral-large-latest",  // Adjust the model name if necessary
-        messages,
+        messages: messages,
       });
 
       console.log(chatResponse)
